@@ -1,5 +1,5 @@
 {
-  "name": "Okcjs March Poster",
+  "name": "okcjs_march_poster",
   "version": "1.0.0",
   "description": "This is an interactive poster that is to promote the OKC.js March meeting",
   "main": "index.js",
