@@ -154,15 +154,6 @@ function preload() {
   game.load.image('phaser-logo', 'phaser_logo.png');
   game.load.image('okcjs-icon', 'okcjs_icon.png');
 
-  game.load.audio('vroom', [
-      'music/vroom.mp3',
-      'music/vroom.ogg',
-    ]);
-
-  game.load.audio('twinkle', [
-      'music/twinkle.mp3',
-      'music/twinkle.ogg',
-    ]);
 
 }
 
@@ -342,6 +333,17 @@ function create() {
   game.physics.arcade.enable(okcjsIcon);
   okcjsIcon.anchor.setTo(0.5, 0.5);
   okcjsIcon.body.collideWorldBounds = true;
+
+
+  game.load.audio('vroom', [
+      'music/vroom.mp3',
+      'music/vroom.ogg',
+    ]);
+
+  game.load.audio('twinkle', [
+      'music/twinkle.mp3',
+      'music/twinkle.ogg',
+    ]);
 
 }
 
