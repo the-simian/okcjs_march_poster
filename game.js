@@ -335,15 +335,7 @@ function create() {
   okcjsIcon.body.collideWorldBounds = true;
 
 
-  game.load.audio('vroom', [
-      'music/vroom.mp3',
-      'music/vroom.ogg',
-    ]);
 
-  game.load.audio('twinkle', [
-      'music/twinkle.mp3',
-      'music/twinkle.ogg',
-    ]);
 
 }
 
@@ -408,6 +400,16 @@ function scrollBackground() {
 }
 
 function advanceLevel() {
+
+  game.load.audio('vroom', [
+      'music/vroom.mp3',
+      'music/vroom.ogg',
+    ]);
+
+  game.load.audio('twinkle', [
+      'music/twinkle.mp3',
+      'music/twinkle.ogg',
+    ]);
 
   var screenCenterX = (game.camera.width / 2) + game.camera.view.x;
   var screenCenterY = (game.camera.height / 2) + game.camera.view.y;
