@@ -154,7 +154,15 @@ function preload() {
   game.load.image('phaser-logo', 'phaser_logo.png');
   game.load.image('okcjs-icon', 'okcjs_icon.png');
 
+    game.load.audio('vroom', [
+      'music/vroom.mp3',
+      'music/vroom.ogg',
+    ]);
 
+  game.load.audio('twinkle', [
+      'music/twinkle.mp3',
+      'music/twinkle.ogg',
+    ]);
 }
 
 var loadState = {
@@ -401,15 +409,7 @@ function scrollBackground() {
 
 function advanceLevel() {
 
-  game.load.audio('vroom', [
-      'music/vroom.mp3',
-      'music/vroom.ogg',
-    ]);
 
-  game.load.audio('twinkle', [
-      'music/twinkle.mp3',
-      'music/twinkle.ogg',
-    ]);
 
   var screenCenterX = (game.camera.width / 2) + game.camera.view.x;
   var screenCenterY = (game.camera.height / 2) + game.camera.view.y;
