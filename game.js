@@ -416,6 +416,10 @@ function advanceLevel() {
   logoEmitter.makeParticles('okcjs-icon');
   logoEmitter.setYSpeed(-400, 400);
   logoEmitter.setXSpeed(-400, 400);
+  logoEmitter.minParticleScale = 0.2;
+  logoEmitter.maxParticleScale = 1.5;
+  logoEmitter.minRotation = 1;
+  logoEmitter.maxRotation = 300;
   logoEmitter.gravity = 0;
 
   var tweenLogo = game.add.tween(okcjsIcon);
