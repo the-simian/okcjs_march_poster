@@ -153,6 +153,17 @@ function preload() {
 
   game.load.image('phaser-logo', 'phaser_logo.png');
   game.load.image('okcjs-icon', 'okcjs_icon.png');
+
+  game.load.audio('vroom', [
+      'music/vroom.mp3',
+      'music/vroom.ogg',
+    ]);
+
+  game.load.audio('twinkle', [
+      'music/twinkle.mp3',
+      'music/twinkle.ogg',
+    ]);
+
 }
 
 var loadState = {
@@ -204,8 +215,24 @@ var winState = {
     var winmessage = game.add.image(350, 350, font);
 
     winmessage.anchor.set(0.5, 0.5);
-    winmessage.scale.x = 1.7;
-    winmessage.scale.y = 1.7;
+
+    var tween = game.add.tween(winmessage.scale);
+    var big = {
+      x: 2.3,
+      y: 2.3
+    };
+
+    var small = {
+      x: 1,
+      y: 1
+    }
+    tween
+      .to(big, 1000)
+      .to(small, 500)
+      .easing(Phaser.Easing.Sinusoidal.InOut)
+      .loop()
+      .start();
+
 
 
   },
@@ -379,8 +406,40 @@ function scrollBackground() {
 }
 
 function advanceLevel() {
-  okcjsIcon.kill();
-  game.state.start('win');
+
+  var screenCenterX = (game.camera.width / 2) + game.camera.view.x;
+  var screenCenterY = (game.camera.height / 2) + game.camera.view.y;
+  var vroom = game.add.audio('vroom');
+  var twinkle = game.add.audio('twinkle');
+
+  var logoEmitter = game.add.emitter(0, 0, 25);
+  logoEmitter.makeParticles('okcjs-icon');
+  logoEmitter.setYSpeed(-400, 400);
+  logoEmitter.setXSpeed(-400, 400);
+  logoEmitter.gravity = 0;
+
+  var tweenLogo = game.add.tween(okcjsIcon);
+  vroom.play();
+  tweenLogo.to({
+      x: screenCenterX,
+      y: screenCenterY,
+      angle: 360
+    }, 1000)
+    .to({
+      angle: 2000
+    }, 1000)
+    .start()
+    .onComplete.add(function () {
+      twinkle.play();
+      logoEmitter.x = screenCenterX;
+      logoEmitter.y = screenCenterY;
+      logoEmitter.start(true, 2500, null, 25);
+      okcjsIcon.kill();
+      game.time.events.add(2500, function () {
+        game.state.start('win');
+      })
+    });
+
 }
 
 function update() {
@@ -404,6 +463,7 @@ function render() {
   //  game.debug.text(game.time.physicsElapsed, 32, 32);
   //  game.debug.body(player);
   //  game.debug.bodyInfo(player, 16, 24);
+  //  game.debug.cameraInfo(game.camera)
 }
 
 var mainState = {
