@@ -1,6 +1,5 @@
 'use strict';
 
-
 var map;
 var layer;
 var player;
@@ -8,7 +7,6 @@ var facing = 'left';
 var jumpTimer = 0;
 var cursors;
 var jumpButton;
-
 
 var game;
 var headerText;
@@ -20,20 +18,11 @@ var bgPlanet;
 var speakerName;
 var speakerTwitter;
 
-
-
 function preload() {
 
-  //  game.load.spritesheet('droid', 'assets/games/starstruck/droid.png', 32, 32);
-  //  game.load.image('starSmall', 'assets/games/starstruck/star.png');
-  //  game.load.image('starBig', 'assets/games/starstruck/star2.png');
-
   game.load.spritesheet('dude', 'dude.png', 32, 48);
-
   game.load.tilemap('level', 'poster_level.json', null, Phaser.Tilemap.TILED_JSON);
-
   game.load.image('space_desert_tileset', 'space_desert_tileset.png');
-
   game.load.image('background-mountains', 'mountain_range.png');
   game.load.image('background-stars', 'stars.jpg');
   game.load.image('background-planet', 'background_planet.png');
@@ -44,10 +33,7 @@ function preload() {
   speakerTwitter = '@5imian';
 
   game.load.image('phaser-logo', 'phaser_logo.png');
-
 }
-
-
 
 function create() {
 
@@ -71,7 +57,6 @@ function create() {
 
   phaserLogo.fixedToCamera = false;
 
-
   var headerTextStyle = {
     font: '26pt Helvetica',
     fill: '#e0e4f0',
@@ -84,11 +69,8 @@ function create() {
     align: 'center'
   };
 
-
-
   var headText = game.add.text(game.world.centerX, 32, headerText, headerTextStyle);
   var headDate = game.add.text(game.world.centerX, 90, headerDate, headerDateStyle);
-
 
   headDate.anchor.set(0.5);
   headDate.fixedToCamera = true;
@@ -99,27 +81,18 @@ function create() {
   bgMountains = game.add.tileSprite(0, (786 - 314), 700, 314, 'background-mountains');
   bgMountains.fixedToCamera = true;
 
-  player = game.add.sprite(32, 32, 'dude');
-
+  player = game.add.sprite(32, 384, 'dude');
 
 
   map = game.add.tilemap('level');
-
   map.addTilesetImage('space_desert_tileset');
-
   map.setCollisionByExclusion([13, 14, 15, 16, 46, 47, 48, 49, 50, 51]);
 
   layer = map.createLayer('Tile Layer 1');
-
-
-  //layer.debug = true;
-
   layer.resizeWorld();
 
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.gravity.y = 250;
-
-
   game.physics.enable(player, Phaser.Physics.ARCADE);
 
   player.body.bounce.y = 0.2;
@@ -152,55 +125,72 @@ function create() {
 
   cursors = game.input.keyboard.createCursorKeys();
   jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-
-
-
 }
 
-function update() {
+function left() {
+  player.body.velocity.x = -150;
 
-  bgStars.tilePosition.x += 0.07;
-  bgPlanet.tilePosition.x -= 0.15;
+  if (facing !== 'left') {
+    player.animations.play('left');
+    facing = 'left';
+  }
+}
 
-  game.physics.arcade.collide(player, layer);
+function right() {
+  player.body.velocity.x = 150;
 
+  if (facing !== 'right') {
+    player.animations.play('right');
+    facing = 'right';
+  }
+}
+
+function idle() {
+  if (facing !== 'idle') {
+    player.animations.stop();
+    if (facing === 'left') {
+      player.frame = 0;
+    } else {
+      player.frame = 5;
+    }
+    facing = 'idle';
+  }
+}
+
+function jump() {
+  player.body.velocity.y = -250;
+  jumpTimer = game.time.now + 750;
+}
+
+function playerCanJump() {
+  return jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer;
+}
+
+function movePlayer() {
   player.body.velocity.x = 0;
 
   if (cursors.left.isDown) {
-    player.body.velocity.x = -150;
-
-    if (facing != 'left') {
-      player.animations.play('left');
-      facing = 'left';
-    }
+    left();
   } else if (cursors.right.isDown) {
-    player.body.velocity.x = 150;
-
-    if (facing != 'right') {
-      player.animations.play('right');
-      facing = 'right';
-    }
+    right();
   } else {
-    if (facing != 'idle') {
-      player.animations.stop();
-
-      if (facing == 'left') {
-        player.frame = 0;
-      } else {
-        player.frame = 5;
-      }
-
-      facing = 'idle';
-    }
+    idle();
   }
 
-  if (jumpButton.isDown && player.body.onFloor() && game.time.now > jumpTimer) {
-    player.body.velocity.y = -250;
-    jumpTimer = game.time.now + 750;
+  if (playerCanJump()) {
+    jump();
   }
+}
 
+function scrollBackground() {
+  bgStars.tilePosition.x += 0.07;
+  bgPlanet.tilePosition.x -= 0.15;
+}
 
+function update() {
+  scrollBackground();
+  game.physics.arcade.collide(player, layer);
+  movePlayer();
 }
 
 function render() {
@@ -209,11 +199,15 @@ function render() {
   //  game.debug.bodyInfo(player, 16, 24);
 }
 
-var gameOptions = {
+var mainState = {
   preload: preload,
   create: create,
   update: update,
   render: render
 };
 
-game = new Phaser.Game(700, 786, Phaser.AUTO, 'poster_game', gameOptions);
+game = new Phaser.Game(700, 786, Phaser.AUTO, 'poster_game');
+
+game.state.add('main', mainState);
+
+game.state.start('main');
