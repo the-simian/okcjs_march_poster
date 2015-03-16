@@ -200,7 +200,7 @@ var winState = {
     winMusic.loop = true;
     winMusic.play();
     filter = new Phaser.Filter(game, null, starFieldFilterFragment);
-    filter.setResolution(700, 786);
+    filter.setResolution(700 *  miniScale, 786 * miniScale);
 
     var sprite = game.add.sprite();
     sprite.width = 700 * miniScale;
@@ -212,19 +212,19 @@ var winState = {
     var font = game.add.retroFont('steel', 32, 32, Phaser.RetroFont.TEXT_SET3, 10);
     font.setText('You are a \n Javascript \n Chamption', true, 0, 8, Phaser.RetroFont.ALIGN_CENTER);
 
-    var winmessage = game.add.image(350, 350, font);
+    var winmessage = game.add.image(350 * miniScale, 350 * miniScale, font);
 
     winmessage.anchor.set(0.5, 0.5);
 
     var tween = game.add.tween(winmessage.scale);
     var big = {
-      x: 2.3,
-      y: 2.3
+      x: 2.3 ,
+      y: 2.3 
     };
 
     var small = {
-      x: 1,
-      y: 1
+      x: 1 ,
+      y: 1 
     }
     tween
       .to(big, 1000)
